@@ -1,6 +1,5 @@
 Customers:
-ID: 101, Name: ALICE SMITH, Email: alice@example.com, Personal Phone: 123567890
-ID: 102, Name: bob, Email: bob@corp.com, Company: bob industries
+ID: 112, Name: aar, Email: aas@gmail.com, Company: ab
 
 Sales:
-Customer ID: 101 - Sale Amount: $5000.0
+Customer ID: 112 - Sale Amount: $999999.0

@@ -1,15 +1,12 @@
 package in.ac.adit.pwj.miniproject.crm;
 
 public class Corporate extends Customer {
-    private String companyName;
-
-    public Corporate(String id, String name, String email, String companyName) {
-        super(id, name, email);
-        this.companyName = companyName;
+    public Corporate(String id, String name, String email, String contact) {
+        super(id, name, email, contact);
     }
 
     @Override
-    public String getDetails() {
-        return super.getDetails() + ", Company: " + companyName;
+    public String toString() {
+        return "C," + super.toString();
     }
 }

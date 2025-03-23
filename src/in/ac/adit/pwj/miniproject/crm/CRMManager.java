@@ -5,54 +5,61 @@ import java.util.*;
 
 public class CRMManager {
     private Map<String, Customer> customers = new HashMap<>();
-    private List<String> sales = new ArrayList<>();
-    private final Object lock = new Object();  // For Thread Safety
+    private static final String FILE_PATH = "in/ac/adit/pwj/miniproject/crm/crm_data.txt";
 
-    public void addCustomer(Customer customer) throws CRMException {
-        synchronized (lock) {
-            if (customers.containsKey(customer.getId())) {
-                throw new CRMException("Customer with ID " + customer.getId() + " already exists!");
+    public synchronized void addCustomer(Customer customer) throws CRMException {
+        if (customers.containsKey(customer.getId())) {
+            throw new CRMException("Customer ID already exists!");
+        }
+        customers.put(customer.getId(), customer);
+    }
+
+    public synchronized void recordSale(String customerId, double amount) throws CRMException {
+        if (!customers.containsKey(customerId)) {
+            throw new CRMException("Customer not found!");
+        }
+        System.out.println("Sale recorded for ID: " + customerId + " Amount: " + amount);
+    }
+
+    public synchronized String generateReport() {
+        StringBuilder report = new StringBuilder("Customer Report:\n");
+        for (Customer c : customers.values()) {
+            report.append(c).append("\n");
+        }
+        return report.toString();
+    }
+
+    public synchronized void saveData() throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
+            for (Customer c : customers.values()) {
+                writer.write(c.toString());
+                writer.newLine();
             }
-            customers.put(customer.getId(), customer);
-            System.out.println("Customer added successfully.");
         }
     }
 
-    public void recordSale(String customerId, double amount) throws CRMException {
-        synchronized (lock) {
-            if (!customers.containsKey(customerId)) {
-                throw new CRMException("Customer ID not found!");
-            }
-            sales.add("Customer ID: " + customerId + " - Sale Amount: $" + amount);
-            System.out.println("Sale recorded successfully.");
-        }
-    }
+    public synchronized void loadData() throws IOException {
+        File file = new File(FILE_PATH);
+        if (!file.exists()) return;
 
-    public void generateReport() {
-        synchronized (lock) {
-            System.out.println("\n--- Customer Report ---");
-            customers.values().forEach(c -> System.out.println(c.getDetails()));
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length < 5) continue;
 
-            System.out.println("\n--- Sales Report ---");
-            sales.forEach(System.out::println);
-        }
-    }
+                String type = parts[0];
+                String id = parts[1];
+                String name = parts[2];
+                String email = parts[3];
+                String contact = parts[4];
 
-    public void saveDataToFile() throws IOException {
-        synchronized (lock) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("crm_data.txt"))) {
-                writer.write("Customers:\n");
-                for (Customer c : customers.values()) {
-                    writer.write(c.getDetails());
-                    writer.newLine();
+                if (type.equals("I")) {
+                    customers.put(id, new Individual(id, name, email, contact));
+                } else if (type.equals("C")) {
+                    customers.put(id, new Corporate(id, name, email, contact));
                 }
-                writer.write("\nSales:\n");
-                for (String sale : sales) {
-                    writer.write(sale);
-                    writer.newLine();
-                }
             }
-            System.out.println("Data saved to crm_data.txt.");
         }
     }
 }

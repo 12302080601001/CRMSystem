@@ -57,7 +57,9 @@ public class CRMManager {
                 if (type.equals("I")) {
                     customers.put(id, new Individual(id, name, email, contact));
                 } else if (type.equals("C")) {
-                    customers.put(id, new Corporate(id, name, email, contact));
+                    if (parts.length < 6) continue;
+                    String companyName = parts[5];
+                    customers.put(id, new Corporate(id, name, email, contact, companyName));
                 }
             }
         }

@@ -1,9 +1,8 @@
 package in.ac.adit.pwj.miniproject.crm;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.IOException;
+import javax.swing.*;
 
 public class CRMApp extends JFrame {
     private CRMManager crmManager;
@@ -96,7 +95,8 @@ public class CRMApp extends JFrame {
             if ("Individual".equals(type)) {
                 crmManager.addCustomer(new Individual(id, name, email, contact));
             } else {
-                crmManager.addCustomer(new Corporate(id, name, email, contact));
+                String companyName = JOptionPane.showInputDialog("Enter Company Name:");
+                crmManager.addCustomer(new Corporate(id, name, email, contact, companyName));
             }
             JOptionPane.showMessageDialog(this, type + " Customer Added Successfully!");
         } catch (CRMException e) {

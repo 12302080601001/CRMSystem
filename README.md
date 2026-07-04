@@ -1,4 +1,4 @@
-# CRMSystem by Aarish Bhanwadia 12302080601001
+# CRMSystem by Aarish Bhanwadia 
 Project Overview
 
 Aarish CRM System is a Customer Relationship Management (CRM) application designed to manage customer interactions, track sales, and generate reports. This system supports Individual and Corporate customers, providing a professional user interface built with Java Swing and handling data with file storage.
